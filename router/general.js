@@ -21,14 +21,14 @@ public_users.post("/register", (req, res) => {
 public_users.get('/', function (req, res) {
   res.json(books);
 });
-//obtain usin route and callback
+//obtain books using route and callback
 public_users.get('/callback', function (req, res) {
   getAllBooks((err, books) => {
     if (err) {
       // If an error occurs, send a server error response
       res.status(500).json({ message: "Failed to load books", error: err });
     } else {
-      // If books are successfully retrieved, send them back as JSON
+      // if book exist then return the list of books
       res.json(books);
     }
   });
