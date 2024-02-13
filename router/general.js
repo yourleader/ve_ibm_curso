@@ -21,7 +21,7 @@ public_users.post("/register", (req, res) => {
 public_users.get('/', function (req, res) {
   res.json(books);
 });
-
+//obtain usin route and callback
 public_users.get('/callback', function (req, res) {
   getAllBooks((err, books) => {
     if (err) {
