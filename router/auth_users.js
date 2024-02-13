@@ -13,7 +13,7 @@ let users = [
       lastName: "wick",
       email: "johnwick@gamil.com",
       DOB: "22-01-1990",
-      password: "john123" // Asumiendo que añadimos contraseñas
+      password: "john123" 
   },
   {
       firstName: "John",
@@ -60,7 +60,7 @@ regd_users.post("/login", (req, res) => {
 // Añadir una reseña de libro
 regd_users.use(bodyParser.json());
 
-regd_users.put("/auth/review/:isbn", (req, res) => {
+regd_users.put("/review/:isbn", (req, res) => {
   const { review } = req.body;
   const { isbn } = req.params;
 
@@ -72,7 +72,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const book = books[isbn];
   if (book) {
     // Añadir la reseña al libro
-    book.reviews.push(review); // Asumiendo que `reviews` es un arreglo
+    book.reviews.push(review);
     return res.status(200).json({message: "Review added successfully", isbn, review});
   } else {
     // Si no se encuentra el libro con el ISBN proporcionado
