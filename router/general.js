@@ -105,7 +105,7 @@ public_users.get('/title/:title', function (req, res) {
 
 //obtener por medio de promesas  asincronas
 
-public_users.get('/title/:title', async function (req, res) {
+public_users.get('/title/promise/:title', async function (req, res) {
   const { title } = req.params;
 
   async function getBooksByTitle(title) {
