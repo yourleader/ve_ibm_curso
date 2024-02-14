@@ -159,7 +159,6 @@ public_users.get('/isbn/promise/:isbn', async function (req, res) {
 
 function getBookDetailsAsync(bookId) {  
   return new Promise((resolve, reject) => {  
-    // Assuming `books` is a predefined collection where bookId is the key
     const book = books[bookId];  
     if (book) {  
       resolve(book);  
