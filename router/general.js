@@ -69,6 +69,29 @@ public_users.get('/author/:author', function (req, res) {
   }
 });
 
+public_users.get('/author/promise/:author', async function (req, res) {
+  const { author } = req.params;
+
+ 
+  async function getBooksByAuthor(author) {
+    return Promise.resolve(Object.values(books).filter(book => book.author.includes(author)));
+  }
+
+  try {
+    const filteredBooks = await getBooksByAuthor(author);
+
+    if (filteredBooks.length > 0) {
+      res.json(filteredBooks);
+    } else {
+      res.status(404).json({ message: "No books found for this author" });
+    }
+  } catch (error) {
+    // Handle any unexpected errors
+    res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+});
+
+
 // Obtener todos los libros basados en título
 public_users.get('/title/:title', function (req, res) {
   const { title } = req.params;
@@ -79,6 +102,30 @@ public_users.get('/title/:title', function (req, res) {
     res.status(404).json({ message: "No books found with this title" });
   }
 });
+
+//obtener por medio de promesas  asincronas
+
+public_users.get('/title/:title', async function (req, res) {
+  const { title } = req.params;
+
+  async function getBooksByTitle(title) {
+    return Promise.resolve(Object.values(books).filter(book => book.title.toLowerCase().includes(title.toLowerCase())));
+  }
+
+  try {
+    const filteredBooks = await getBooksByTitle(title);
+
+    if (filteredBooks.length > 0) {
+      res.json(filteredBooks);
+    } else {
+      res.status(404).json({ message: "No books found with this title" });
+    }
+  } catch (error) {
+    // Handle any unexpected errors
+    res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+});
+
 
 // Obtener reseña del libro
 public_users.get('/review/:isbn', function (req, res) {
@@ -94,23 +141,33 @@ public_users.get('/review/:isbn', function (req, res) {
 //obtain books by promise
 
 
-public_users.get('/isbn/promise/:isbn', function (req, res) {
-  const { isbn } = req.params;
-  const bookId = parseInt(isbn, 10);
+public_users.get('/isbn/promise/:isbn', async function (req, res) {  
+  try {
+    const { isbn } = req.params;  
+    const bookId = parseInt(isbn, 10);  
+    const book = await getBookDetailsAsync(bookId);  
 
+    if (book) {  
+      res.json(book);  
+    } else {  
+      res.status(404).json({ message: "Book not found" });  
+    }  
+  } catch (error) {  
+    res.status(500).json({ message: "An error occurred", error: error.message });   
+  } 
+});  
 
-  getBookDetailsAsync(bookId)
-    .then(book => {
-      if (book) {
-        res.json(book);
-      } else {
-        res.status(404).json({ message: "Book not found" });
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ message: "An error occurred whatever", error: error.message });
-    });
-});
+function getBookDetailsAsync(bookId) {  
+  return new Promise((resolve, reject) => {  
+    // Assuming `books` is a predefined collection where bookId is the key
+    const book = books[bookId];  
+    if (book) {  
+      resolve(book);  
+    } else {  
+      reject(new Error("Book not found"));  
+    }  
+  });  
+}
 
 function getBookDetailsAsync(bookId) {
   return new Promise((resolve, reject) => {
@@ -123,4 +180,7 @@ function getBookDetailsAsync(bookId) {
     }
   });
 }
+
+
+
 module.exports.general = public_users;
